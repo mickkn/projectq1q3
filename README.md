@@ -55,3 +55,6 @@ q1q3trinity : need beta test and bug search (24bit)
 q1q3vertical : need beta testing (24bit & FBCA Waypoint)
 
 q1ra3map5 : working on light and weapon placements
+
+# Download from QW.nu forum
+https://www.quakeworld.nu/forum/topic/6152
