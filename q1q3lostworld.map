@@ -1,0 +1,30 @@
+//BSPGROUPS0001
+//BSPGROUPINFO"None" "255 255 255" "1"
+//BSPFAVORITES0010
+//AD2X1-A;AD2X1-B;ADOOR01_2;ADOOR02_2;ADOOR03_2;ADOOR03_3;ADOOR03_4;ADOOR03_5;ADOOR03_6;ADOOR09_1
+//BSPCAMERAS0005
+//"0.0 -256.0 128.0 0 0 180"
+//"0.0 -128.0 128.0 0 0 180"
+//"0.0 -128.0 128.0 0 0 180"
+//"0.0 -128.0 128.0 0 0 180"
+//"0.0 -128.0 128.0 0 0 180"
+//BSPMAPTYPE0000
+{
+"wad"	"q3tools.wad;qltex1.wad;qltex2.wad;qltex3.wad;q3base.wad;q3gothic.wad;q3other.wad"
+"mapversion"	"220"
+"message"	"Lost World"
+"_color"	"1.000000 0.383065 0.201613"
+"ambient"	"6"
+"music"	"music/fla22k_04_intro.wav music/fla22k_04_loop.wav"
+"_minvertexlight"	"25"
+"classname"	"worldspawn"
+{
+//"0000" "0"
+( 8 8 -8 ) ( -8 8 -8 ) ( -8 -8 -8 ) none 0 0 0 1.0 1.0
+( -8 -8 8 ) ( -8 8 8 ) ( 8 8 8 ) none 0 0 0 1.0 1.0
+( -8 -8 8 ) ( 8 -8 8 ) ( 8 -8 -8 ) none 0 0 0 1.0 1.0
+( 8 -8 8 ) ( 8 8 8 ) ( 8 8 -8 ) none 0 0 0 1.0 1.0
+( 8 8 8 ) ( -8 8 8 ) ( -8 8 -8 ) none 0 0 0 1.0 1.0
+( -8 8 8 ) ( -8 -8 8 ) ( -8 -8 -8 ) none 0 0 0 1.0 1.0
+}
+}

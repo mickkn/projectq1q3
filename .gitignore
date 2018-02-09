@@ -1,2 +1,6 @@
-!*.map
-!*.wad
+*.txt
+*.prt
+*.lit
+*.rmf
+*.rmx
+*.log
