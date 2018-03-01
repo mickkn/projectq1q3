@@ -56,5 +56,8 @@ q1q3vertical : need beta testing (24bit & FBCA Waypoint)
 
 q1ra3map5 : working on light and weapon placements
 
-# Download from QW.nu forum
+# Download from QW.nu forum (with all stuff)
 https://www.quakeworld.nu/forum/topic/6152
+
+# or download the map package from the relase page
+https://github.com/mickkn/projectq1q3/releases
