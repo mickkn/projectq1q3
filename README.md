@@ -62,7 +62,7 @@ https://www.quakeworld.nu/forum/topic/6152
 # or download the map package from the relase page
 https://github.com/mickkn/projectq1q3/releases
 
-#Q3TEX2WAD:
+# Q3TEX2WAD:
 
 Added a application to find and rename strings in the WAD file. The application uses a config file which should be comma or semi-colon separated with 2 columns and no empty lines. This application can be used to any renaming of strings in a file, and will create a new file with fixed_ prefix.
 
