@@ -64,6 +64,6 @@ https://github.com/mickkn/projectq1q3/releases
 
 # Q3TEX2WAD:
 
-Added a application to find and rename strings in the WAD file. The application uses a config file which should be comma or semi-colon separated with 2 columns and no empty lines. This application can be used to any renaming of strings in a file, and will create a new file with fixed_ prefix.
+Added a application to find and rename strings in the MAP file. The application uses a config file which should be comma or semi-colon separated with 2 columns and no empty lines. This application can be used to any renaming of strings in a file, and will create a new file with fixed_ prefix.
 
 **Usage: q3tex2wad.exe configfile.csv mapfile.map**
