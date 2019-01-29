@@ -67,3 +67,18 @@ https://github.com/mickkn/projectq1q3/releases
 Added a application to find and rename strings in the MAP file. The application uses a config file which should be comma or semi-colon separated with 2 columns and no empty lines. This application can be used to any renaming of strings in a file, and will create a new file with fixed_ prefix.
 
 **Usage: q3tex2wad.exe configfile.csv mapfile.map**
+
+Example BACTH SCRIPT together with q3map2 (drag&drop .bsp file to .bat file)
+
+q3map2.exe -convert -format map %1
+
+*@echo off*
+*SET "var=_converted.map"*
+*SET "mapname=%~n1"*
+*SET "output=%mapname%%var%"*
+*@echo on*
+
+*q3tex2wad.exe q3tex2wad.csv %output%*
+
+*pause*
+
