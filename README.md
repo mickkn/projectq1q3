@@ -73,9 +73,13 @@ Example BACTH SCRIPT together with q3map2 (drag&drop .bsp file to .bat file)
 q3map2.exe -convert -format map %1
 
 *@echo off*
+
 *SET "var=_converted.map"*
+
 *SET "mapname=%~n1"*
+
 *SET "output=%mapname%%var%"*
+
 *@echo on*
 
 *q3tex2wad.exe q3tex2wad.csv %output%*
