@@ -5,11 +5,13 @@ using namespace std;
 void find_and_replace(string* line, const string search, const string replace) {
 
     string tempLine = *line;
+    string tempSearch = " "+search+" ";
+    string tempReplace = " "+replace+" ";
 
     while(true) {
-        size_t subStringPos = tempLine.find(search);    // Find first word in line
-        if(subStringPos != string::npos) {              // If word is found
-            tempLine.replace(subStringPos, search.size(), replace); // Replace in line string
+        size_t subStringPos = tempLine.find(tempSearch);                    // Find first word in line (with additional spaces)
+        if(subStringPos != string::npos) {                                  // If word is found
+            tempLine.replace(subStringPos, tempSearch.size(), tempReplace); // Replace in line string
         } else {
             break;  // Exit while loop
         }

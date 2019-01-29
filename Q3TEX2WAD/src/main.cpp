@@ -47,7 +47,7 @@ int main(int argc, char *argv[]) {
 
         // Fix the rotation bug
         if(texfix == true) {
-            find_and_replace(&line, " 0.5 0.5 ", " 0 0 ");
+            find_and_replace(&line, "0.5 0.5", "0 0");
         }
 
         outputMapFile << line << '\n';              // Place new replace line in new file
