@@ -48,7 +48,7 @@ q1q3solid : **Finished (24bit & FBCA Waypoint)**
 
 q1q3thunderstruck : **Finished (24bit & FBCA Waypoint)**
 
-q1q3toxicity : need bugfix and beta testing (24bit)
+q1q3toxicity : **Finished (24bit)**
 
 q1q3trinity : need beta test and bug search (24bit)
 
