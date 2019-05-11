@@ -68,6 +68,10 @@ Added a application to find and rename strings in the MAP file. The application 
 
 **Usage: It is a GUI**
 
+Install Python3: https://www.python.org/downloads/
+
 Install/place q3map2 in same dir as the .py file if you want to decompile Quake3 bsp files.
+
+http://q3map2.robotrenegade.com/
 
 
