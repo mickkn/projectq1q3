@@ -9,8 +9,8 @@ except ImportError:
 top_message = 'Project Q1Q3 - Texture Fix by Mick'
 choice = 'none'
 config_file = 'q3tex2wad.csv'
-bsp_file = 'q3dm6.bsp'
-map_file = 'elder_converted.map'
+bsp_file = 'none'
+map_file = 'none'
 
 rotation_fix_name = "Rotation fix"
 rotation_fix = 'no'
@@ -27,11 +27,15 @@ replace = []
 # Decompile with Q3MAP2
 def decompile_bsp(file_name):
     d_choice = easygui.choicebox('Pick Map Type', top_message, decompile_choices)
-    if 'QuakeLive Map' in d_choice:
-        os.system('q3map2.exe -convert -game et -format map ' + file_name)
-        os.system('q3map2.exe -convert -game et -format quake3 ' + file_name.replace('.map', '_converted.map'))
-    elif 'Quake3 Map' in d_choice:
-        os.system('q3map2.exe -convert -format map ' + file_name)
+    if d_choice is not None:
+        if 'QuakeLive Map' in d_choice:
+            os.system('q3map2.exe -convert -game et -format map ' + '\"'+file_name+'\"')
+            os.system('q3map2.exe -convert -game et -format quake3 '
+                      ''+'\"'+file_name.replace('.map', '_converted.map')+'\"')
+        elif 'Quake3 Map' in d_choice:
+            err = os.system('q3map2.exe -convert -format map ' + '\"'+file_name+'\"')
+            if err is not 0:
+                easygui.msgbox('Error occurred, did you chose a .bsp file?', 'Error')
 
 
 # Read config file
@@ -42,6 +46,7 @@ def read_config(file_name, original_name, new_name):
             new_name.append(line.split(';')[1].rstrip('\n'))    	# Add code
 
 
+# Fix the texture names
 def replace_textures(map_name, find_lst, replace_lst, tex_options):
     print("Fixing.....")
     with open(map_name, 'r') as input_file:
@@ -51,10 +56,12 @@ def replace_textures(map_name, find_lst, replace_lst, tex_options):
                 for p in range(len(find_lst)):                                       # Check all finds until one match
                     if caps_originals_name in tex_options:
                         if find_lst[p].upper() in line:                              # Check line for find name
-                            line = line.replace(find_lst[p].upper(), replace_lst[p])
+                            line = line.replace(' '+find_lst[p].upper()+' ',
+                                                ' '+replace_lst[p]+' ')
                     else:
                         if find_lst[p] in line:
-                            line = line.replace(find_lst[p], replace_lst[p])         # Create a new line with replaced
+                            line = line.replace(' '+find_lst[p]+' ',
+                                                ' '+replace_lst[p]+' ')              # Create a new line with replaced
                 output_file.write(line)                                              # Write to output file
     print("DONE!")
     input_file.close()
@@ -75,7 +82,6 @@ while choice != 'Exit':
     options = 'Options!\n' + 'Rotation fix: ' + rotation_fix + '\nCAPS originals: ' + caps_originals
     choice = easygui.buttonbox(message+'\n\n'+options, top_message,
                                ('Decompile', 'BSP File', 'Fix', 'Map File', 'Config File', 'Options', 'Exit'))
-
 
     if choice is 'Decompile':
         print(bsp_file)
