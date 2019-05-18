@@ -71,8 +71,6 @@ def replace_textures(map_name, find_lst, replace_lst, tex_options):
 # MENU
 chosen_options = []
 
-read_config(config_file, find, replace)
-
 while choice != 'Exit':
 
     message = 'Choose!' + \
@@ -94,6 +92,7 @@ while choice != 'Exit':
             easygui.msgbox("ERROR: Config file need to be a CSV file with semicolon separation")
             choice = 'none'
         else:
+            read_config(config_file, find, replace)
             replace_textures(map_file, find, replace, chosen_options)
     elif choice == 'Map File':
         map_file = easygui.fileopenbox()
@@ -103,8 +102,6 @@ while choice != 'Exit':
         config_file = easygui.fileopenbox()
         if config_file is None:
             choice = 'none'
-        else:
-            read_config(config_file, find, replace)
     elif choice == 'Options':
         chosen_options = easygui.multchoicebox('Pick options', top_message, option_choices)
         if chosen_options is None:
