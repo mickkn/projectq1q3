@@ -1,5 +1,6 @@
 import os
 import sys
+import shutil
 try:
 	import easygui
 except ImportError:
@@ -61,11 +62,31 @@ def write_tex_output(map_name, founds_lst, replaced_lst):
 	return 0
 
 # Create a folder with 24bit textures
-def create_24bit_folder(map_name, founds_lst, replaced_lst):
-	return 0
+def create_24bit_folder(map_name, files_to_find, replace_names, texture_dir):
+	
+	# New texture folder to save some stuff in
+	texFolder = map_name.rsplit('.')[0]
+	
+	# Create a folder if it doesn't exist
+	if not os.path.exists(texFolder):
+		os.mkdir(texFolder)
+	else:
+		shutil.rmtree(texFolder, ignore_errors=True)
+		os.mkdir(texFolder)
+
+	# Copy files to folder from texture directory
+	for root, dirs, files in os.walk(texture_dir):		# Start in texture folder
+		for file in files:								# Every file in texture folder
+			_file = root.rsplit(os.path.sep)[-1] + '/' + file.rsplit('.')[0] # File path to check vs founds
+			if _file in files_to_find:	# If file match file to find
+				index = files_to_find.index(_file)				# Get found index in list
+				fileext = '.' + file.rsplit('.')[-1].upper()	# Get file extension
+				shutil.copy(os.path.join(root, file), \
+							os.path.join(texFolder, replace_names[index] + fileext)) # Copy and rename file	
+	return texFolder
 
 # Create a wad file with the used textures
-def create_wad(map_name, replaced_lst, texture_folder):
+def create_wad(map_name, texture_folder):
 	return 0
 
 ### Program variables
@@ -75,16 +96,21 @@ find = []			# Find string list
 replace = []		# Replace string list
 
 # TEXT VARIABLES 
-headerMsg = 'PROJECT Q1Q3 UTILITY TOOL - by Mick'	# MENU Name
-choice = 'none'										# MENU Choice
-confFile = 'q1q3utility.csv'							# Default CSV file
-bspFile = 'none'									# Default BSP file
-#mapFile = 'none'
-mapFile = r'D:\[GAMES]\Quakeworld\#MapEditor\Quake\Maps\Q3TEX2WAD\q3dm6_converted.map'									# Default MAP file
+headerMsg = 'PROJECT Q1Q3 UTILITY TOOL - by Mick 2020'	# MENU Name
+choice = 'none'											# MENU Choice
+confFile = 'q1q3tex2wad.csv'							# Default CSV file
+bspFile = 'none'										# Default BSP file
+#mapFile = 'none'										# Default MAP file
+mapFile = r'D:\[GAMES]\Quakeworld\#MapEditor\Quake\Maps\Q1Q3UTILITY\test_map.map'									
+texDir = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], '24bit', 'textures')
 
-rotationFixName = "Rotation fix"
-rotationFix = 'no'
-optionChoices = [rotationFixName]
+rotationFixName = "ROTATION BUGFIX"
+rotationFix     = 'no'
+createWadName   = "CREATE WAD"
+createWad       = 'no'
+create24BitName = "CREATE 24BIT DIR"
+create24Bit     = 'no'
+optionChoices   = [rotationFixName, createWadName, create24BitName]
 
 decompileChoices = ['QuakeLive Map', 'Quake3 Map']
 q3map2ErrMsg = "Error occurred: \n1. Did you chose a correct .bsp file? \n2. Are Q3MAP2 installed correctly? All *.dll's in folder?"
@@ -97,6 +123,7 @@ c_decompile = "DEC"
 c_find_map = "MAP"
 c_fix_map = "FIX"
 c_find_conf = "CFG"
+c_find_tex_dir = "TEX"
 c_options = "OPT"
 c_exit = "EXIT"
 
@@ -117,13 +144,23 @@ while choice != 'Exit':
 		bspFileDisplay = os.path.join('..', bspFile.rsplit(os.path.sep)[-3], bspFile.rsplit(os.path.sep)[-2], bspFile.rsplit(os.path.sep)[-1])
 	else:
 		bspFileDisplay = bspFile
+	if os.path.sep in texDir:
+		texDirDisplay = os.path.join('..', texDir.rsplit(os.path.sep)[-3], texDir.rsplit(os.path.sep)[-2], texDir.rsplit(os.path.sep)[-1])
+	else:
+		texDirDisplay = texDir
+	
 	message = '%% MAKE SOME CHOICES! %%' + \
-			  '\nBSP FILE: ' + bspFileDisplay + \
-			  '\nCONFIG FILE (.csv): ' + confFile + \
-			  '\nMAP FILE: ' + mapFileDisplay
-	options = 'OPTIONS!\n' + 'Rotation fix: ' + rotationFix
+			  '\nBSP FILE    : ' + bspFileDisplay + \
+			  '\nCONFIG FILE : ' + confFile + \
+			  '\nMAP FILE    : ' + mapFileDisplay + \
+			  '\nTEX FOLDER  : ' + texDirDisplay
+	options = 'OPTIONS!\n' + \
+				rotationFixName + '\t\t: '   + rotationFix + '\n' + \
+				createWadName   + '\t\t : '  + createWad   + '\n' + \
+				create24BitName + '\t: '     + create24Bit
+			  
 	choice = easygui.buttonbox(message+'\n\n'+options, headerMsg,
-							   (c_find_bsp, c_decompile, c_find_map, c_fix_map, c_find_conf, c_options, c_exit))
+							   (c_find_bsp, c_decompile, c_find_map, c_fix_map, c_find_conf, c_find_tex_dir, c_options, c_exit))
 
 	if choice == c_decompile:
 		decOpt = easygui.choicebox('Pick Map Type', headerMsg, decompileChoices)
@@ -144,7 +181,7 @@ while choice != 'Exit':
 			read_config(confFile, find, replace)	# Read config file
 			replace_textures(mapFile, find, replace, chosen_options, founds, replaced)	# Replace textures in map file
 			write_tex_output(mapFile, founds, replaced)		# Write a log
-			texFolder = create_24bit_folder(mapFile, founds, replaced)	# Fetch 24bit files in folder
+			texFolder = create_24bit_folder(mapFile, founds, replaced, texDir)	# Fetch 24bit files in folder
 			create_wad(mapFile, replaced, texFolder)			# Create a wad from replced textures
 			easygui.msgbox(fixOkMsg, 'Success')
 	elif choice == c_find_map:
@@ -154,6 +191,11 @@ while choice != 'Exit':
 	elif choice == c_find_conf:
 		confFile = easygui.fileopenbox()
 		if confFile is None:
+			choice = 'none'
+	elif choice == c_find_tex_dir:
+		texFolder = easygui.diropenbox()
+		print(texFolder)
+		if texFolder is None:
 			choice = 'none'
 	elif choice == c_options:
 		chosen_options = easygui.multchoicebox('Pick options', headerMsg, optionChoices)
