@@ -62,15 +62,15 @@ https://www.quakeworld.nu/forum/topic/6152
 # or download the map package from the relase page
 https://github.com/mickkn/projectq1q3/releases
 
-# Q3TEX2WAD:
+# Q1Q3UTILITY:
 
 Added a application to find and rename strings in the MAP file. The application uses a config file which should be semi-colon separated with 2 columns and no empty lines. This script will output a *_fixed.map file
+
+The script will also be able to decompile maps with q3map2
 
 **Usage: It is a GUI**
 
 Install Python3: https://www.python.org/downloads/
-
-Install/place q3map2 in same dir as the .py file if you want to decompile Quake3 bsp files.
 
 http://q3map2.robotrenegade.com/
 
