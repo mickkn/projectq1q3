@@ -23,6 +23,7 @@ def decompile_bsp(file_name, decode_option):
 
 # Read config file
 def read_config(file_name, original_name, new_name):
+	print("READING CONFIG FILE...")
 	with open(file_name) as open_file:
 		for line in open_file:
 			original_name.append(line.split(';')[0])	  			# Add directory
@@ -31,7 +32,7 @@ def read_config(file_name, original_name, new_name):
 
 # Fix the texture names
 def replace_textures(map_name, find_lst, replace_lst, tex_options, founds_lst, replaced_lst):
-	print("Fixing.....")
+	print("REPLACING TEXTURES IN MAP FILE...")
 	with open(map_name, 'r') as input_file:
 		converted_map_name = map_name.replace('.map', '_fixed.map')
 		with open(converted_map_name, 'w') as output_file:
@@ -48,12 +49,13 @@ def replace_textures(map_name, find_lst, replace_lst, tex_options, founds_lst, r
 								founds_lst.append(find_lst[p])											# Save the found texture
 								replaced_lst.append(replace_lst[p])										# Save the found texture replacement
 				output_file.write(line)																	# Write to output file
-	print("DONE!")
 	input_file.close()
 	output_file.close()
+	print("TEXTURES REPLACED IN MAP FILE!")
 
 # Write replaced texture report
 def write_tex_output(map_name, founds_lst, replaced_lst):
+	print("WRITING TEXTURE LOG")
 	log_file_name = map_name.replace('.map', '.csv')
 	with open(log_file_name, 'w') as output_file:
 		for i in range(len(founds_lst)):
@@ -63,7 +65,7 @@ def write_tex_output(map_name, founds_lst, replaced_lst):
 
 # Create a folder with 24bit textures
 def create_24bit_folder(map_name, files_to_find, replace_names, texture_dir):
-	
+	print("COPYING TEXTURES TO FOLDER...")
 	# New texture folder to save some stuff in
 	texFolder = map_name.rsplit('.')[0]
 	
@@ -83,11 +85,23 @@ def create_24bit_folder(map_name, files_to_find, replace_names, texture_dir):
 				fileext = '.' + file.rsplit('.')[-1].upper()	# Get file extension
 				shutil.copy(os.path.join(root, file), \
 							os.path.join(texFolder, replace_names[index] + fileext)) # Copy and rename file	
+	
 	return texFolder
 
 # Create a wad file with the used textures
 def create_wad(map_name, texture_folder):
-	return 0
+	print("CREATING WAD FILE...")
+	wadFileName = map_name.rsplit(os.path.sep)[-1].rsplit('.')[0] + '.wad'
+
+	err_lst = []
+
+	for root, dirs, files in os.walk(texture_folder):		# Start in texture folder
+		for _file in files:
+			err = os.system("python wad.py -q " + wadFileName + " " + os.path.join(root, _file))
+			if err != 0:
+				err_lst.append(_file)
+
+	return err_lst
 
 ### Program variables
 
@@ -105,11 +119,11 @@ mapFile = r'D:\[GAMES]\Quakeworld\#MapEditor\Quake\Maps\Q1Q3UTILITY\test_map.map
 texDir = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], '24bit', 'textures')
 
 rotationFixName = "ROTATION BUGFIX"
-rotationFix     = 'no'
+rotationFix     = 'yes'
 createWadName   = "CREATE WAD"
-createWad       = 'no'
+createWad       = 'yes'
 create24BitName = "CREATE 24BIT DIR"
-create24Bit     = 'no'
+create24Bit     = 'yes'
 optionChoices   = [rotationFixName, createWadName, create24BitName]
 
 decompileChoices = ['QuakeLive Map', 'Quake3 Map']
@@ -168,7 +182,7 @@ while choice != 'Exit':
 		if err == "error_q2map2":
 			easygui.msgbox(q3map2ErrMsg, 'ERROR')
 		else:
-			easygui.msgbox(bspConvOkMsg, 'Success')
+			easygui.msgbox(bspConvOkMsg, 'SUCCESS')
 		mapFile = bspFile.replace('.bsp', '_converted.map')
 	elif choice == c_find_bsp:
 		bspFile = easygui.fileopenbox()
@@ -182,8 +196,19 @@ while choice != 'Exit':
 			replace_textures(mapFile, find, replace, chosen_options, founds, replaced)	# Replace textures in map file
 			write_tex_output(mapFile, founds, replaced)		# Write a log
 			texFolder = create_24bit_folder(mapFile, founds, replaced, texDir)	# Fetch 24bit files in folder
-			create_wad(mapFile, replaced, texFolder)			# Create a wad from replced textures
-			easygui.msgbox(fixOkMsg, 'Success')
+			err = create_wad(mapFile, texFolder)			# Create a wad from replced textures
+			if len(err) != 0:
+				print(err)
+				errFiles = ""
+				for name in err:
+					errFiles = errFiles + name + '\n'
+				errMsg = "Failed to complete wad file\n" + \
+						 errFiles + \
+						 '\nCould be size is not dividable by 8'
+				easygui.msgbox(errMsg, 'NOT SUCCEEDED')
+			else:
+				easygui.msgbox(fixOkMsg, 'SUCCESS')
+			print('\n')
 	elif choice == c_find_map:
 		mapFile = easygui.fileopenbox()
 		if mapFile == None:
