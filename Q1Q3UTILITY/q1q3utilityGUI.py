@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+from PIL import Image
 try:
 	import easygui
 except ImportError:
@@ -88,18 +89,44 @@ def create_24bit_folder(map_name, files_to_find, replace_names, texture_dir):
 	
 	return texFolder
 
+# Resize with ration
+def resize_image(image_file, new_max):
+	return 0
+
 # Create a wad file with the used textures
 def create_wad(map_name, texture_folder):
 	print("CREATING WAD FILE...")
 	wadFileName = map_name.rsplit(os.path.sep)[-1].rsplit('.')[0] + '.wad'
 
+	# Create a WAD folder 
+	if not os.path.exists(os.path.join(texture_folder, 'wad')):
+		os.mkdir(os.path.join(texture_folder, 'wad'))
+	else:
+		shutil.rmtree(os.path.join(texture_folder, 'wad'), ignore_errors=True)
+		os.mkdir(os.path.join(texture_folder, 'wad'))
+
 	err_lst = []
 
 	for root, dirs, files in os.walk(texture_folder):		# Start in texture folder
-		for _file in files:
-			err = os.system("python wad.py -q " + wadFileName + " " + os.path.join(root, _file))
-			if err != 0:
-				err_lst.append(_file)
+		if 'wad' not in root:		# Don't look in wad folder
+			for _file in files:
+				
+				# Convert to BMP
+				fileext = '.' + _file.rsplit('.')[-1]
+				#print(os.path.join(root, _file.replace(fileext, '.BMP')))
+				srcFile = os.path.join(root, _file)
+				bmpFile = os.path.join(os.path.join(root, 'wad'), _file.replace(fileext, '.BMP'))
+				Image.open(srcFile).save(bmpFile)
+				
+				# Pallette conversion
+				pal = Image.open('qpalette.png')
+				img = Image.open(bmpFile)
+				converted = img.convert("P", palette=pal)
+				converted.save(bmpFile)
+				
+				err = os.system("python wad.py -q " + wadFileName + " " + os.path.join(root, _file))
+				if err != 0:
+					err_lst.append(_file)
 
 	return err_lst
 
