@@ -1,4 +1,5 @@
 import os
+import platform
 import sys
 import shutil
 import math
@@ -8,16 +9,27 @@ try:
 except ImportError:
 	sys.exit("""You need easygui! run 'pip install easygui' """)
 
+Q3Map = 'QUAKE3 MAP'
+QLMap = 'QUAKELIVE MAP'
+
 # Decompile with Q3MAP2
 def decompile_bsp(file_name, decode_option):
 	if decode_option != None:
-		if 'QuakeLive Map' in decode_option:
-			err1 = os.system('q3map2.exe -convert -game et -format map ' + '\"'+file_name+'\"')
-			err2 = os.system('q3map2.exe -convert -game et -format quake3 '''+'\"'+file_name.replace('.map', '_converted.map')+'\"')
+	
+		if platform.system() == 'Windows':
+			q3map2Exe = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], 'q3map2.exe')
+		elif platform.system() == 'Linux':
+			q3map2Exe = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], 'q3map2.x86')
+		else:
+			return "error_platform"
+	
+		if QLMap in decode_option:
+			err1 = os.system(q3map2Exe + ' -convert -game et -format map ' + '\"'+file_name+'\"')
+			err2 = os.system(q3map2Exe + ' -convert -game et -format quake3 '''+'\"'+file_name.replace('.map', '_converted.map')+'\"')
 			if err1 != 0 or err2 != 0:
 				return "error_q2map2"
-		elif 'Quake3 Map' in decode_option:
-			err = os.system('q3map2.exe -convert -format map ' + '\"'+file_name+'\"')
+		elif Q3Map in decode_option:
+			err = os.system(q3map2Exe + ' -convert -format map ' + '\"'+file_name+'\"')
 			if err != 0:
 				return "error_q2map2"
 	return 0
@@ -110,6 +122,11 @@ def resize_to_power_of_two(image_file, max_size):
 # Create a folder with 24bit textures
 def create_24bit_folder(map_name, files_to_find, replace_names, texture_dir):
 	print("COPYING TEXTURES TO FOLDER...")
+	
+	if not os.path.exists(texture_dir):
+		print(texture_dir + ": NOT FOUND")
+		return -1
+	
 	# New texture folder to save some stuff in
 	texFolder = map_name.rsplit('.')[0]
 	
@@ -185,13 +202,14 @@ replace = []		# Replace string list
 # TEXT VARIABLES 
 headerMsg = 'PROJECT Q1Q3 UTILITY TOOL - by Mick 2020'	# MENU Name
 choice = 'none'											# MENU Choice
-confFile = 'q1q3tex2wad.csv'							# Default CSV file
+confFile = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], 'q1q3tex2wad.csv')		# Default CSV file
 bspFile = 'none'										# Default BSP file
 mapFile = 'none'										# Default MAP file								
 texDir = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], 'textures')
 
-decompileChoices = ['QuakeLive Map', 'Quake3 Map']
+decompileChoices = [QLMap, Q3Map]
 q3map2ErrMsg = "Error occurred: \n1. Did you chose a correct .bsp file? \n2. Are Q3MAP2 installed correctly? All *.dll's in folder?"
+platformErr = "Your platform is not supported"
 bspConvOkMsg = "BSP converted successfully!"
 fixOkMsg = "SUCCESS, write some more info here !"
 helpMsg = "\n\n%% MANUAL %%" + \
@@ -221,14 +239,21 @@ chosen_options = []
 
 while choice != 'Exit':
 
-	if os.path.sep in mapFile:
-		mapFileDisplay = os.path.join('..', mapFile.rsplit(os.path.sep)[-3], mapFile.rsplit(os.path.sep)[-2], mapFile.rsplit(os.path.sep)[-1])
-	else:
-		mapFileDisplay = mapFile
 	if os.path.sep in bspFile:
 		bspFileDisplay = os.path.join('..', bspFile.rsplit(os.path.sep)[-3], bspFile.rsplit(os.path.sep)[-2], bspFile.rsplit(os.path.sep)[-1])
 	else:
 		bspFileDisplay = bspFile
+
+	if os.path.sep in confFile:
+		confFileDisplay = os.path.join('..', confFile.rsplit(os.path.sep)[-3], confFile.rsplit(os.path.sep)[-2], confFile.rsplit(os.path.sep)[-1])
+	else:
+		confFileDisplay = confFile
+
+	if os.path.sep in mapFile:
+		mapFileDisplay = os.path.join('..', mapFile.rsplit(os.path.sep)[-3], mapFile.rsplit(os.path.sep)[-2], mapFile.rsplit(os.path.sep)[-1])
+	else:
+		mapFileDisplay = mapFile
+
 	if os.path.sep in texDir:
 		texDirDisplay = os.path.join('..', texDir.rsplit(os.path.sep)[-3], texDir.rsplit(os.path.sep)[-2], texDir.rsplit(os.path.sep)[-1])
 	else:
@@ -236,7 +261,7 @@ while choice != 'Exit':
 	
 	message = '%% MAKE SOME CHOICES! %%' + \
 			  '\nBSP FILE    : ' + bspFileDisplay + \
-			  '\nCONFIG FILE : ' + confFile + \
+			  '\nCFG FILE    : ' + confFileDisplay + \
 			  '\nMAP FILE    : ' + mapFileDisplay + \
 			  '\nTEX FOLDER  : ' + texDirDisplay
 			  
@@ -263,19 +288,23 @@ while choice != 'Exit':
 			replace_textures(mapFile, find, replace, chosen_options, founds, replaced)	# Replace textures in map file
 			write_tex_output(mapFile, founds, replaced)		# Write a log
 			texFolder = create_24bit_folder(mapFile, founds, replaced, texDir)	# Fetch 24bit files in folder
-			err = create_wad(mapFile, texFolder)			# Create a wad from replced textures
-			if len(err) != 0:
-				print(err)
-				errFiles = ""
-				for name in err:
-					errFiles = errFiles + '['+name+']' + '\n'
-				errMsg = "FAILED TO COMPLETE WAD FILE\n" + \
-						 "AFFECTED FILES:\n" + \
-						 errFiles
-				easygui.msgbox(errMsg, 'NOT SUCCEEDED')
+			if texFolder != -1:
+				err = create_wad(mapFile, texFolder)			# Create a wad from replced textures
+				if len(err) != 0:
+					print(err)
+					errFiles = ""
+					for name in err:
+						errFiles = errFiles + '['+name+']' + '\n'
+					errMsg = "FAILED TO COMPLETE WAD FILE\n" + \
+							 "AFFECTED FILES:\n" + \
+							 errFiles
+					easygui.msgbox(errMsg, 'NOT SUCCEEDED')
+				else:
+					easygui.msgbox(fixOkMsg, 'SUCCESS')
 			else:
-				easygui.msgbox(fixOkMsg, 'SUCCESS')
-			print('\n')
+				errMsg = texDir + "\n\n NOT FOUND"
+				easygui.msgbox(errMsg, 'NOT SUCCEEDED')
+				
 	elif choice == c_find_map:
 		mapFile = easygui.fileopenbox()
 		if mapFile == None:
