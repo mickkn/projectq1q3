@@ -66,7 +66,7 @@ https://github.com/mickkn/projectq1q3/releases
 
 Added a application to find and rename strings in the MAP file. The application uses a config file which should be semi-colon separated with 2 columns and no empty lines. This script will output a *_fixed.map file
 
-The script will also be able to decompile maps with q3map2
+The script will also be able to decompile maps with q3map2 and create a map specific wad and 24bit folder
 
 **Usage: It is a GUI**
 
