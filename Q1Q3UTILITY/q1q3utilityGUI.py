@@ -1,6 +1,7 @@
 import os
 import sys
 import shutil
+import math
 from PIL import Image
 try:
 	import easygui
@@ -21,7 +22,6 @@ def decompile_bsp(file_name, decode_option):
 				return "error_q2map2"
 	return 0
 
-
 # Read config file
 def read_config(file_name, original_name, new_name):
 	print("READING CONFIG FILE...")
@@ -29,7 +29,6 @@ def read_config(file_name, original_name, new_name):
 		for line in open_file:
 			original_name.append(line.split(';')[0])	  			# Add directory
 			new_name.append(line.split(';')[1].rstrip('\n'))		# Add code
-
 
 # Fix the texture names
 def replace_textures(map_name, find_lst, replace_lst, tex_options, founds_lst, replaced_lst):
@@ -64,6 +63,50 @@ def write_tex_output(map_name, founds_lst, replaced_lst):
 	output_file.close()
 	return 0
 
+# Resize with ration
+def resize_to_power_of_two(image_file, max_size):
+	
+	save = 0
+	image = Image.open(image_file)
+	width, height = image.size
+	#print("Old size: " + str(width) + 'x' + str(height))
+
+	hpot = math.log(height, 2)						# Get log_2(height)
+	wpot = math.log(width, 2)						# Get log_2(width)
+
+	# Check for odd sizes (fit to power of 2)
+	if (wpot % 1) != 0:								# Check for power of two
+		save = 1									# Save file
+		if round(wpot) == 0:						# Resize with 8 as minimum
+			width = 8								# New width
+		else:
+			width = pow(2,round(wpot))				# New width
+			
+	if (hpot % 1) != 0:								# Check for power of eight
+		save = 1									# Save file
+		if round(hpot) == 0:						# Resize with 8 as minimum
+			height = 8								# New height
+		else:
+			height = pow(2,round(hpot))				# New height
+
+	# Check for size above 256 px
+	if width > max_size:
+		ratio = (max_size/float(width))					# Create ratio from width towards 256 px
+		height = int((float(height)*float(ratio)))	# Apply ratio to height
+		width = max_size									# New width
+		save = 1									# Save file	
+
+	if height > max_size:
+		ratio = (max_size/float(height))					# Create ratio from height towards 256 px
+		width = int((float(width)*float(ratio)))	# Apply ratio to width
+		height = max_size								# New height
+		save = 1									# Save file	
+			
+	if save != 0:
+		#print("New size: " + str(width) + 'x' + str(height))
+		image = image.resize((width, height), Image.ANTIALIAS)	# Resize accordingly
+		image.save(image_file)									# Save file
+
 # Create a folder with 24bit textures
 def create_24bit_folder(map_name, files_to_find, replace_names, texture_dir):
 	print("COPYING TEXTURES TO FOLDER...")
@@ -84,39 +127,41 @@ def create_24bit_folder(map_name, files_to_find, replace_names, texture_dir):
 			if _file in files_to_find:	# If file match file to find
 				index = files_to_find.index(_file)				# Get found index in list
 				fileext = '.' + file.rsplit('.')[-1].upper()	# Get file extension
-				shutil.copy(os.path.join(root, file), \
-							os.path.join(texFolder, replace_names[index] + fileext)) # Copy and rename file	
+				srcFile = os.path.join(root, file)				# Source file
+				distFile = os.path.join(texFolder, replace_names[index] + fileext) # Renamed distination
+				shutil.copy(srcFile, distFile) 					# Copy
+				resize_to_power_of_two(distFile, 256)			# Check for size and resize if needed
 	
 	return texFolder
-
-# Resize with ration
-def resize_image(image_file, new_max):
-	return 0
 
 # Create a wad file with the used textures
 def create_wad(map_name, texture_folder):
 	print("CREATING WAD FILE...")
 	wadFileName = map_name.rsplit(os.path.sep)[-1].rsplit('.')[0] + '.wad'
+	wadTexFolder = os.path.join(texture_folder, 'wad')
 
 	# Create a WAD folder 
-	if not os.path.exists(os.path.join(texture_folder, 'wad')):
-		os.mkdir(os.path.join(texture_folder, 'wad'))
+	if not os.path.exists(wadTexFolder):
+		os.mkdir(wadTexFolder)
 	else:
-		shutil.rmtree(os.path.join(texture_folder, 'wad'), ignore_errors=True)
-		os.mkdir(os.path.join(texture_folder, 'wad'))
+		shutil.rmtree(wadTexFolder, ignore_errors=True)
+		os.mkdir(wadTexFolder)
+
+	if os.path.exists(wadFileName):	# Delete before making new
+		shutil.rm(wadFileName)
 
 	err_lst = []
 
 	for root, dirs, files in os.walk(texture_folder):		# Start in texture folder
-		if 'wad' not in root:		# Don't look in wad folder
+		if 'wad' not in root:								# Don't look in wad folder
 			for _file in files:
 				
 				# Convert to BMP
-				fileext = '.' + _file.rsplit('.')[-1]
-				#print(os.path.join(root, _file.replace(fileext, '.BMP')))
-				srcFile = os.path.join(root, _file)
-				bmpFile = os.path.join(os.path.join(root, 'wad'), _file.replace(fileext, '.BMP'))
-				Image.open(srcFile).save(bmpFile)
+				fileext = '.' + _file.rsplit('.')[-1]	# File extension
+				srcFile = os.path.join(root, _file)		# Source file path
+				bmpFile = os.path.join(os.path.join(root, 'wad'), _file.replace(fileext, '.BMP')) # Distination file path
+				Image.open(srcFile).save(bmpFile)		# Copy as BMP file
+				resize_to_power_of_two(bmpFile, 128)	# Resize BMP
 				
 				# Pallette conversion
 				pal = Image.open('qpalette.png')
@@ -124,6 +169,7 @@ def create_wad(map_name, texture_folder):
 				converted = img.convert("P", palette=pal)
 				converted.save(bmpFile)
 				
+				# Make the new wad file
 				err = os.system("python wad.py -q " + wadFileName + " " + os.path.join(root, _file))
 				if err != 0:
 					err_lst.append(_file)
@@ -141,32 +187,30 @@ headerMsg = 'PROJECT Q1Q3 UTILITY TOOL - by Mick 2020'	# MENU Name
 choice = 'none'											# MENU Choice
 confFile = 'q1q3tex2wad.csv'							# Default CSV file
 bspFile = 'none'										# Default BSP file
-#mapFile = 'none'										# Default MAP file
-mapFile = r'D:\[GAMES]\Quakeworld\#MapEditor\Quake\Maps\Q1Q3UTILITY\test_map.map'									
-texDir = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], '24bit', 'textures')
-
-rotationFixName = "ROTATION BUGFIX"
-rotationFix     = 'yes'
-createWadName   = "CREATE WAD"
-createWad       = 'yes'
-create24BitName = "CREATE 24BIT DIR"
-create24Bit     = 'yes'
-optionChoices   = [rotationFixName, createWadName, create24BitName]
+mapFile = 'none'										# Default MAP file								
+texDir = os.path.join(os.path.abspath(__file__).rsplit(os.path.sep,1)[0], 'textures')
 
 decompileChoices = ['QuakeLive Map', 'Quake3 Map']
 q3map2ErrMsg = "Error occurred: \n1. Did you chose a correct .bsp file? \n2. Are Q3MAP2 installed correctly? All *.dll's in folder?"
 bspConvOkMsg = "BSP converted successfully!"
 fixOkMsg = "SUCCESS, write some more info here !"
+helpMsg = "\n\n%% MANUAL %%" + \
+		  "\nBSP - Choose BSP file" + \
+		  "\nDEC - Decompile chosen BSP" + \
+		  "\nMAP - Chose MAP file (if not decompiling)" + \
+		  "\nFIX - Fixing MAP and create WAD file and 24BIT folder from texture folder" + \
+		  "\nCFG - Choose a different config file" + \
+		  "\nTEX - Choose a different texture folder"
 
 #Choices
-c_find_bsp = "BSP"
-c_decompile = "DEC"
-c_find_map = "MAP"
-c_fix_map = "FIX"
-c_find_conf = "CFG"
-c_find_tex_dir = "TEX"
-c_options = "OPT"
-c_exit = "EXIT"
+c_find_bsp 		= "BSP"
+c_decompile 	= "DEC"
+c_find_map 		= "MAP"
+c_fix_map 		= "FIX"
+c_find_conf 	= "CFG"
+c_find_tex_dir 	= "TEX"
+c_options 		= "OPT"
+c_exit 			= "EXIT"
 
 # Containers for texture list output
 founds = []		
@@ -195,13 +239,9 @@ while choice != 'Exit':
 			  '\nCONFIG FILE : ' + confFile + \
 			  '\nMAP FILE    : ' + mapFileDisplay + \
 			  '\nTEX FOLDER  : ' + texDirDisplay
-	options = 'OPTIONS!\n' + \
-				rotationFixName + '\t\t: '   + rotationFix + '\n' + \
-				createWadName   + '\t\t : '  + createWad   + '\n' + \
-				create24BitName + '\t: '     + create24Bit
 			  
-	choice = easygui.buttonbox(message+'\n\n'+options, headerMsg,
-							   (c_find_bsp, c_decompile, c_find_map, c_fix_map, c_find_conf, c_find_tex_dir, c_options, c_exit))
+	choice = easygui.buttonbox(message + helpMsg, headerMsg,
+							   (c_find_bsp, c_decompile, c_find_map, c_fix_map, c_find_conf, c_find_tex_dir, c_exit))
 
 	if choice == c_decompile:
 		decOpt = easygui.choicebox('Pick Map Type', headerMsg, decompileChoices)
@@ -218,7 +258,7 @@ while choice != 'Exit':
 		if '.csv' not in confFile:
 			easygui.msgbox("ERROR: Config file need to be a CSV file with semicolon separation")
 			choice = 'none'
-		else:
+		else:		
 			read_config(confFile, find, replace)	# Read config file
 			replace_textures(mapFile, find, replace, chosen_options, founds, replaced)	# Replace textures in map file
 			write_tex_output(mapFile, founds, replaced)		# Write a log
@@ -228,10 +268,10 @@ while choice != 'Exit':
 				print(err)
 				errFiles = ""
 				for name in err:
-					errFiles = errFiles + name + '\n'
-				errMsg = "Failed to complete wad file\n" + \
-						 errFiles + \
-						 '\nCould be size is not dividable by 8'
+					errFiles = errFiles + '['+name+']' + '\n'
+				errMsg = "FAILED TO COMPLETE WAD FILE\n" + \
+						 "AFFECTED FILES:\n" + \
+						 errFiles
 				easygui.msgbox(errMsg, 'NOT SUCCEEDED')
 			else:
 				easygui.msgbox(fixOkMsg, 'SUCCESS')
@@ -249,15 +289,6 @@ while choice != 'Exit':
 		print(texFolder)
 		if texFolder is None:
 			choice = 'none'
-	elif choice == c_options:
-		chosen_options = easygui.multchoicebox('Pick options', headerMsg, optionChoices)
-		if chosen_options == None:
-			rotationFix = 'no'
-		else:
-			if rotationFixName in chosen_options:
-				rotationFix = 'yes'
-			else:
-				rotationFix = 'no'
 	else:
 		sys.exit()
 
