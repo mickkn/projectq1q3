@@ -439,6 +439,19 @@ class Q1Q3Util(object):
                 for match in unique_matches:
                     f.write(f"{match}\n")
 
+            # Write a new custom csv for the potentially missing textures
+            csv_out = self._map_output.replace(".map", "_miss_textures.csv")
+            self._logger.info(f"Writing potentially missing textures to {csv_out}...")
+            with open(csv_out, "w") as f:
+
+                # Write the header
+                f.write("Q3TEX;NAME IDEA, CHECK BEFORE INPUTTING IN MAIN CSV\n")
+
+                for match in unique_matches:
+                    # Make a texture name clamped to 15 chars in CAPS based on the original texture
+                    match_conv = match.split('/')[-1].upper()[:15]
+                    f.write(f"{match};{match_conv}\n")
+
     def _load_csv(self) -> None:
         """Function to load the csv file with texture replacements.
 
