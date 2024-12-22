@@ -35,13 +35,12 @@ class Q1Q3Util(object):
     Args:
         arguments (argparse.Namespace): Arguments from the command line.
     """
-
     def __init__(self, arguments: argparse.Namespace):
-
         self._bsp_path = arguments.bsp
         self._csv_path = arguments.csv
         self._map_path = arguments.map
         self._tex_path = arguments.tex
+        self._bmp_size = arguments.size
         self._cpus = arguments.cpus
         self._map_output = None
         self._map_output_textured = None
@@ -328,7 +327,7 @@ class Q1Q3Util(object):
         # Convert the BMP's to actually be 8-bit
         for img in os.listdir(bmp_folder):
             img_path = os.path.join(bmp_folder, img)
-            self._resize_textures(img_path, 128)
+            self._resize_textures(img_path, self._bmp_size)
             img = Image.open(img_path)
             img = img.convert("P", palette=palette)
             img.save(img_path)
@@ -506,6 +505,13 @@ if __name__ == "__main__":
         help="path to quake3/quake live textures, used to replace textures in the map",
     )
     parser.add_argument(
+        "-s",
+        "--size",
+        type=int,
+        default=128,
+        help="maximum size for the wad bmp image (default: 128)",
+    )
+    parser.add_argument(
         "--cpus",
         type=int,
         default=4,
@@ -518,6 +524,7 @@ if __name__ == "__main__":
         choices=["LUMP", "QPIC", "MIPTEX"],
         help="list data type [default: MIPTEX]",
     )
+
 
     q1q3util = Q1Q3Util(parser.parse_args())
     q1q3util.run()
