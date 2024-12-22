@@ -1,1 +1,3 @@
-pillow==10.3.0
+pillow==11.0.0
+easygui==0.98.3
+vgio==1.3.0

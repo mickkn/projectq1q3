@@ -116,7 +116,7 @@ def resize_to_power_of_two(image_file, max_size):
 			
 	if save != 0:
 		#print("New size: " + str(width) + 'x' + str(height))
-		image = image.resize((width, height), Image.ANTIALIAS)	# Resize accordingly
+		image = image.resize((width, height), Image.Resampling.LANCZOS)	# Resize accordingly
 		image.save(image_file)									# Save file
 
 # Create a folder with 24bit textures

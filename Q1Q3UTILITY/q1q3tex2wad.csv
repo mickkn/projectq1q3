@@ -2801,6 +2801,7 @@ gothic_block/blocks19;BLOCKS19
 gothic_block/blocks20b;BLOCKS20B
 gothic_block/blocks9;BLOCKS9
 gothic_block/dark_block;DARK_BLOCK
+gothic_block/demon_block15fx;DEMON_BLOCK15FX
 gothic_block/gkc_larg_left;GKC_LARG_LEFT
 gothic_block/gkc_large_right;GKC_LARGE_RIGHT
 gothic_block/gkc10;GKC10
@@ -3173,6 +3174,7 @@ gothic_trim/pitted_rust;PITTED_RUST
 gothic_trim/pitted_rust_pale_yellow;PITTED_RUST_PAL
 gothic_trim/pitted_rust_small;PITTED_RUST_SMA
 gothic_trim/pitted_rust2;PITTED_RUST2
+gothic_trim/pitted_rust2_trans;PITTED_RUST2
 gothic_trim/pitted_rust3;PITTED_RUST3
 gothic_trim/pitted_rust3_black;PITTED_RUST3_BL
 gothic_trim/pitted_rust3_dkred;PITTED_RUST3_DK
@@ -6161,6 +6163,7 @@ skies/sky_dark_2;SKY4
 skies/space1_bk;SPACE1_BK
 skies/stars_red;STARS_RED
 skies/stormclouds_003;STORMCLOUDS_003
+skies/tim_hell;SKY4
 skies/topclouds;TOPCLOUDS
 skies/toxicsky;TOXICSKY
 skies/xnight2_up;XNIGHT2_UP

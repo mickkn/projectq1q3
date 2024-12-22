@@ -15,18 +15,34 @@ from PIL import Image
 from vgio import quake
 from vgio.quake import lmp, wad
 
-import qcli
-from qcli.common import Parser, ResolvePathAction, read_from_stdin
+
+def read_from_stdin():
+    """Read a list of file paths from stdin, one per line."""
+    if not sys.stdin.isatty():
+        return [line.strip() for line in sys.stdin if line.strip()]
+    return []
+
+
+class ResolvePathAction(argparse.Action):
+    """Custom action to resolve file paths."""
+    def __call__(self, parser, namespace, values, option_string=None):
+        if isinstance(values, list):
+            resolved = [os.path.abspath(value) for value in values]
+        else:
+            resolved = os.path.abspath(values)
+        setattr(namespace, self.dest, resolved)
 
 
 def main():
     """CLI entrypoint"""
 
     # Create and configure argument parser
-    parser = Parser(
+    parser = argparse.ArgumentParser(
         prog='wad',
-        description='Default action is to add or replace wad file entries from'
-            ' list.\nIf list is omitted, wad will use stdin.',
+        description=(
+            'Default action is to add or replace wad file entries from list.\n'
+            'If list is omitted, wad will use stdin.'
+        ),
         formatter_class=argparse.RawTextHelpFormatter,
         epilog='example:\n  wad tex.wad image.png => adds image.png to tex.wad'
     )
@@ -42,7 +58,8 @@ def main():
         'list',
         nargs='*',
         action=ResolvePathAction,
-        default=read_from_stdin()
+        default=read_from_stdin(),
+        help='list of files to add to the WAD file (default: read from stdin)'
     )
 
     parser.add_argument(
@@ -62,9 +79,8 @@ def main():
 
     parser.add_argument(
         '-v', '--version',
-        dest='version',
         action='version',
-        version='{} version {}'.format(parser.prog, qcli.__version__)
+        version='wad version 1.0.0'  # Replace with actual version if needed
     )
 
     # Parse the arguments
@@ -76,7 +92,6 @@ def main():
     if args.quiet:
         def log(message):
             pass
-
     else:
         def log(message):
             print(message)
@@ -169,7 +184,7 @@ def main():
 
                     wad_file.writestr(info, buff)
 
-                except:
+                except Exception:
                     parser.error(sys.exc_info()[1])
 
     sys.exit(0)

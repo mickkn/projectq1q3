@@ -1,2 +1,4 @@
-Pillow
-easygui
+easygui==0.98.3
+pillow==11.0.0
+vgio==1.3.0
+qcli==0.1.1

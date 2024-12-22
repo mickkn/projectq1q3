@@ -16,4 +16,8 @@
 	
 5. If other textures should be added to the config (q1q3tex2wad.csv) file please look for duplicates and use only 15 charactors in the final name
 
+Optional:
+
+Added a q1q3utility.py commandline file, try 'python q1q3utility.py -h' for help
+
 
