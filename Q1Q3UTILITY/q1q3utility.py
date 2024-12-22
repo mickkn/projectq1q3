@@ -57,6 +57,11 @@ class Q1Q3Util(object):
     def run(self):
         """Function to run the utility."""
         if self._map_path is None:
+            if self._bsp_path is None:
+                print("No map or bsp file path provided.")
+                print("Read the help for more information.")
+                print(f"python {os.path.basename(__file__)} -h")
+                exit(1)
             self._map_path = self._bsp_path.replace(".bsp", "_converted.map")
             self._decompile()
         else:
@@ -475,7 +480,7 @@ if __name__ == "__main__":
 
     parser = argparse.ArgumentParser(
         prog="q1q3utility",
-        description=("Utility to decompile Q3 maps to Q1 maps.\n"),
+        description="Utility to decompile Q3 maps to Q1 maps.\n",
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=f"example:\n python {os.path.basename(__file__)} -b map.bsp -c q1q3tex2wad.csv -t ./textures",
     )
