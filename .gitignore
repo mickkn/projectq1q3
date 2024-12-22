@@ -8,3 +8,11 @@
 *.vis
 *.pts
 Q1Q3UTILITY/textures/*
+.idea/**
+*.tga
+*.bmp
+*.jpg
+*.exe
+**/build/
+venv/
+*.max

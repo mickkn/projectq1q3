@@ -1,3 +1,5 @@
+# Readme
+
 1. Install Python 3.x (only tested with this)
 
 2. Extract all texture folders from your .pk3 files into one texture folder in the Q1Q3UTILITY folder
@@ -8,16 +10,24 @@
 	
 	..\Q1Q3UTILITY\textures\gothic_block
 	
-3. Install easygui with pip
+3. Install requirements for your python distro
 
-4. Open a commando prompt and start the application with 'python q1q3utilityGUI.py'
+	```bash
+	pip install -r requirements.txt
+	```
 
-	With this approach you will see some debug messages, else it should also work by just opening the q1q3utilityGUI.py with python
-	
-5. If other textures should be added to the config (q1q3tex2wad.csv) file please look for duplicates and use only 15 charactors in the final name
+4. Open a commando prompt and start the application with:'
 
-Optional:
+	```bash
+	python q1q3utility.py -h
+	```
+Follow the CLI guidelines, and you should be good to go.
 
-Added a q1q3utility.py commandline file, try 'python q1q3utility.py -h' for help
+## Troubleshooting
 
+If you have any issues, please open an issue on the GitHub page.
+
+The script will create a .csv file with missing textures, this list can be used to add to the q1q3tex2wad.csv for 
+running the script again. This is mostly for custom maps with new textures. Remember to extract the textures from 
+your custom map (.pk3 file) to the texture folder in the Q1Q3UTILITY folder.
 
