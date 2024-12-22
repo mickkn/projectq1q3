@@ -6,6 +6,7 @@
 :Date:        20-12-2024
 :Author:      Mick K
 """
+
 import argparse
 import csv
 import glob
@@ -21,7 +22,7 @@ import subprocess
 import time
 from collections import defaultdict
 from multiprocessing import Pool
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 
 from PIL import Image
 from vgio import quake
@@ -34,6 +35,7 @@ class Q1Q3Util(object):
     Args:
         arguments (argparse.Namespace): Arguments from the command line.
     """
+
     def __init__(self, arguments: argparse.Namespace):
 
         self._bsp_path = arguments.bsp
@@ -52,7 +54,11 @@ class Q1Q3Util(object):
         self._textures_not_found = []
         self._potentially_missing_textures = []
         self._logger = logging.getLogger(__name__)
-        logging.basicConfig(level=logging.INFO, format='[%(asctime)s] %(levelname)s - %(message)s', datefmt='%H:%M:%S')
+        logging.basicConfig(
+            level=logging.INFO,
+            format="[%(asctime)s] %(levelname)s - %(message)s",
+            datefmt="%H:%M:%S",
+        )
 
     def run(self):
         """Function to run the utility."""
@@ -108,10 +114,8 @@ class Q1Q3Util(object):
                 stderr=subprocess.DEVNULL,
             )
 
-        except subprocess.CalledProcessError as e:
-            self._logger.warning(
-                "Error decompiling the map, probably because it is version 47. Trying again..."
-            )
+        except subprocess.CalledProcessError:
+            self._logger.warning("Error decompiling the map, probably because it is version 47. Trying again...")
 
             try:
                 # Use QuakeLive approach to decompile the map
@@ -169,13 +173,13 @@ class Q1Q3Util(object):
         with open(self._map_path, "r") as f:
             lines = f.readlines()
         chunk_size = len(lines) // self._cpus  # Divide into processes
-        chunks = [lines[i:i + chunk_size] for i in range(0, len(lines), chunk_size)]
+        chunks = [lines[i : i + chunk_size] for i in range(0, len(lines), chunk_size)]
 
         # Process chunks in parallel
         with Pool(processes=self._cpus) as pool:
             results = pool.starmap(
                 Q1Q3Util._replace_textures_worker,
-                [(chunk, regex, replacements) for chunk in chunks]
+                [(chunk, regex, replacements) for chunk in chunks],
             )
 
         # Collect results and write output
@@ -189,9 +193,7 @@ class Q1Q3Util(object):
         # Log replacements summary
         for original, replacement in replacements.items():
             if original in self._found_textures:
-                self._logger.info(
-                    f"Replaced '{original}' with '{replacement}' {self._found_textures[original]} times."
-                )
+                self._logger.info(f"Replaced '{original}' with '{replacement}' {self._found_textures[original]} times.")
 
         self._logger.info(f"Textures replaced successfully, in {time.time() - start:.2f} seconds.")
 
@@ -210,13 +212,14 @@ class Q1Q3Util(object):
         result = []
         found_replacements = defaultdict(int)  # To store counts of replacements in this chunk
         for line in chunk:
+
             def replacer(match):
                 original = match.group(0)
                 found_replacements[original] += 1
                 return replacements[original]
 
             line = regex.sub(replacer, line)  # Replace textures
-            line = line.replace(" 0.5 0.5 ", " 0 0 ") # Fix texture alignment
+            line = line.replace(" 0.5 0.5 ", " 0 0 ")  # Fix texture alignment
             result.append(line)
 
         return result, found_replacements
@@ -258,8 +261,8 @@ class Q1Q3Util(object):
             src: Source texture to find.
             dst: Destination folder to copy the texture to.
         """
-        path = src.split('/')
-        path[-1] = path[-1] + '.*'
+        path = src.split("/")
+        path[-1] = path[-1] + ".*"
         search_pattern = os.path.join(self._tex_path, *path)
         found = glob.glob(search_pattern)
 
@@ -317,17 +320,17 @@ class Q1Q3Util(object):
 
                 # Copy the image to the bmp folder, and change the extension to .bmp
                 img_path = os.path.join(output_folder, img)
-                bmp_path = os.path.join(bmp_folder, os.path.splitext(img)[0] + '.bmp')
+                bmp_path = os.path.join(bmp_folder, os.path.splitext(img)[0] + ".bmp")
                 shutil.copy(img_path, bmp_path)
 
-        palette = Image.open('qpalette.png')
+        palette = Image.open("qpalette.png")
 
         # Convert the BMP's to actually be 8-bit
         for img in os.listdir(bmp_folder):
             img_path = os.path.join(bmp_folder, img)
             self._resize_textures(img_path, 128)
             img = Image.open(img_path)
-            img = img.convert('P', palette=palette)
+            img = img.convert("P", palette=palette)
             img.save(img_path)
 
         return bmp_folder
@@ -339,26 +342,26 @@ class Q1Q3Util(object):
 
         # Flatten palette
         palette = [color for p in quake.palette for color in p]
-        palette_image = Image.frombytes('P', (16, 16), bytes(palette))
+        palette_image = Image.frombytes("P", (16, 16), bytes(palette))
         palette_image.putpalette(palette)
 
-        with wad.WadFile(self._wad_output, 'w') as wad_file:
+        with wad.WadFile(self._wad_output, "w") as wad_file:
             self._logger.info(f"Archive: {os.path.basename(self._wad_output)}")
 
             for file in os.listdir(output_folder):
                 img_path = os.path.join(output_folder, file)
-                self._logger.info(f'Processing: {file}')
+                self._logger.info(f"Processing: {file}")
 
                 try:
-                    if self._wad_type == 'LUMP':
+                    if self._wad_type == "LUMP":
                         wad_file.write(img_path)
 
                     else:
-                        img = Image.open(img_path).convert(mode='RGB')
+                        img = Image.open(img_path).convert(mode="RGB")
                         img = img.quantize(palette=palette_image)
-                        name = os.path.basename(file).split('.')[0]
+                        name = os.path.basename(file).split(".")[0]
 
-                        if self._wad_type == 'QPIC':
+                        if self._wad_type == "QPIC":
                             self._add_qpic_to_wad(img, name, wad_file)
                         else:
                             self._add_miptex_to_wad(img, name, wad_file)
@@ -384,7 +387,7 @@ class Q1Q3Util(object):
         info.compression = wad.CompressionType.NONE
         info.type = wad.LumpType.QPIC
 
-        self._logger.info(f'  Adding QPIC: {name}')
+        self._logger.info(f"  Adding QPIC: {name}")
         wad_file.writestr(info, buff)
 
     def _add_miptex_to_wad(self, img: Image.Image, name: str, wad_file: wad.WadFile) -> None:
@@ -396,9 +399,9 @@ class Q1Q3Util(object):
         mip.pixels = []
 
         for i in range(4):  # Generate mipmaps
-            resized_image = img.resize((img.width // (2 ** i), img.height // (2 ** i)))
+            resized_image = img.resize((img.width // (2**i), img.height // (2**i)))
             data = resized_image.tobytes()
-            mip.pixels += struct.unpack(f'<{len(data)}B', data)
+            mip.pixels += struct.unpack(f"<{len(data)}B", data)
             if i < 3:
                 mip.offsets.append(mip.offsets[-1] + len(data))
 
@@ -412,7 +415,7 @@ class Q1Q3Util(object):
         info.compression = wad.CompressionType.NONE
         info.type = wad.LumpType.MIPTEX
 
-        self._logger.info(f'  Adding MIPTEX: {name}')
+        self._logger.info(f"  Adding MIPTEX: {name}")
         wad_file.writestr(info, buff)
 
     def _get_potentially_missing_textures(self) -> None:
@@ -454,7 +457,7 @@ class Q1Q3Util(object):
 
                 for match in unique_matches:
                     # Make a texture name clamped to 15 chars in CAPS based on the original texture
-                    match_conv = match.split('/')[-1].upper()[:15]
+                    match_conv = match.split("/")[-1].upper()[:15]
                     f.write(f"{match};{match_conv}\n")
 
     def _load_csv(self) -> None:
@@ -468,7 +471,7 @@ class Q1Q3Util(object):
             raise ValueError("No csv file path provided.")
 
         with open(self._csv_path, "r") as f:
-            reader = csv.reader(f, delimiter=';')
+            reader = csv.reader(f, delimiter=";")
             for row in reader:
                 q3tex, q1tex = row[:2]
                 self._tex_placements[q3tex] = q1tex
@@ -484,9 +487,7 @@ if __name__ == "__main__":
         formatter_class=argparse.RawTextHelpFormatter,
         epilog=f"example:\n python {os.path.basename(__file__)} -b map.bsp -c q1q3tex2wad.csv -t ./textures",
     )
-    parser.add_argument(
-        "-b", "--bsp", help="path to the bsp file, the map to decompile"
-    )
+    parser.add_argument("-b", "--bsp", help="path to the bsp file, the map to decompile")
     parser.add_argument(
         "-c",
         "--csv",
