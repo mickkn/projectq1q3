@@ -171,6 +171,7 @@ base_floor2/tin_floor03step;TIN_FLOOR03STEP
 base_floor2/tin_floor03stepx;TIN_FLOOR03ST00
 base_light/baslt4_1;BASLT4_1
 base_light/border11light;BORDER11LIGHT
+base_light/border7_ceil;BORDER7_CEIL50
 base_light/border7_ceil50;BORDER7_CEIL50
 base_light/ceil1_22a;CEIL1_22A
 base_light/ceil1_30;CEIL1_30
@@ -217,6 +218,7 @@ base_light/runwayb_dblue;RUNWAYB_DBLUE
 base_light/runwayb_dred;RUNWAYB_DRED
 base_light/rustyblock_light;RUSTYBLOCK_LIGH
 base_light/rustytrim_lights;RUSTYTRIM_LIGHT
+base_light/s_proto_light;PROTO_LIGHT
 base_light/scrolllight;SCROLLLIGHT
 base_light/scrolllight2;SCROLLLIGHT2
 base_light/striplight_blue;STRIPLIGHT_BLUE
@@ -228,6 +230,7 @@ base_light/trianglelight;TRIANGLELIGHT
 base_light/wstlt1_5;WSTLT1_5
 base_light/wstlt1_5;WSTLT1_500
 base_light/wsupprt1_12;WSUPPRT1_12
+base_light/xceil1_39_90k;CEIL1_39
 base_light/xlight5;XLIGHT5
 base_object/boxq3_1;BOXQ3_1
 base_object/boxq3_1b;BOXQ3_1B
@@ -2828,6 +2831,7 @@ gothic_block/killblock_i2;KILLBLOCK_I2
 gothic_block/killblock_i2_end;KILLBLOCK_I2_03
 gothic_block/killblock_i3;KILLBLOCK_I3
 gothic_block/killblock_i4;KILLBLOCK_I4
+gothic_block/killblock_i4b;KILLBLOCK_I4
 gothic_block/killblock_iron_b;KILLBLOCK_IRON_
 gothic_block/killblock_j;KILLBLOCK_J
 gothic_block/killblock_j2;KILLBLOCK_J2
@@ -3030,17 +3034,17 @@ gothic_light/gothic_light2_lrg;GOTHIC_LIGHT2_L
 gothic_light/gothic_light3;GOTHIC_LIGHT3
 gothic_light/ironcrosslt1;IRONCROSSLT1001
 gothic_light/ironcrosslt2;IRONCROSSLT2
+gothic_light/ironcrosslt2_10000;IRONCROSSLT2
 gothic_light/ironcrosslt2_2000;IRONCROSSLT2
+gothic_light/ironcrosslt2_20000;IRONCROSSLT2
 gothic_light/ironcrosslt2_4000;IRONCROSSLT2
 gothic_light/ironcrosslt2_5000;IRONCROSSLT2
-gothic_light/ironcrosslt2_10000;IRONCROSSLT2
-gothic_light/ironcrosslt2_20000;IRONCROSSLT2
 gothic_light/ironcrossltbkgrd;IRONCROSSLTBKGR
 gothic_light/ironcrossltblue;IRONCROSSLTBL01
 gothic_light/ironcrossltred;IRONCROSSLTRE00
 gothic_light/pentagram_light1;PENTAGRAM_LIGHT
-gothic_light/pentagram_light1_5K;PENTAGRAM_LIGHT
 gothic_light/pentagram_light1_1K;PENTAGRAM_LIGHT
+gothic_light/pentagram_light1_5K;PENTAGRAM_LIGHT
 gothic_light/skulllight01;SKULLLIGHT01
 gothic_trim/baseboard01;BASEBOARD01
 gothic_trim/baseboard03;BASEBOARD03
@@ -3576,6 +3580,7 @@ kothic-terrain/xodrock-a;XODROCK-A
 liquids/acid;ACID
 liquids/bubbles;BUBBLES
 liquids/eyetoeye_lava;#EYETOEYE_LAVA
+liquids/flatlavahell_1500;#LAVAHELL
 liquids/kc_fogcloud3;KC_FOGCLOUD3
 liquids/lavafloor;#LAVAFLOOR
 liquids/lavahell;#LAVAHELL
@@ -3711,6 +3716,7 @@ map_sinister/item_decal_rg_sand;ITEM_DECAL_RG_S
 map_sinister/item_decal_rl_sand;ITEM_DECAL_RL_S
 map_sinister/item_decal_sg_sand;ITEM_DECAL_SG_S
 map_sinister/orange_flare;ORANGE_FLARE
+map_sinister/sinister_sky;SKY4
 map_sinister/tp_darkwood_singleplank;TP_DARKWOOD_SIN
 map_terminus/item_decal_armor_brown;ITEM_DECAL_AR01
 map_terminus/item_decal_bs_brown;ITEM_DECAL_BS_B
@@ -6167,6 +6173,7 @@ skies/tim_hell;SKY4
 skies/topclouds;TOPCLOUDS
 skies/toxicsky;TOXICSKY
 skies/xnight2_up;XNIGHT2_UP
+skies/xtoxicskytim_q3dm5;SKY4
 skies2/clouds2;CLOUDS200
 skies2/ctf6sky;CTF6SKY
 skies2/ctf6sky2;CTF6SKY2
@@ -6872,4 +6879,3 @@ wet/copper_plate_wet;COPPER_PLATE_WE
 wet/largerblock3b3dim_wet;LARGERBLOCK3B03
 wet/q1metal7_98a_wet;Q1METAL7_98A_WE
 wet/tin_floor03_wet;TIN_FLOOR03_WET
-map_sinister/sinister_sky;SKY4
