@@ -25,7 +25,7 @@
 
 ### ✅ Finished
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3almostlost.png" alt="q1q3almostlost" width="200"/>
@@ -41,7 +41,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3dm14.png" alt="q1q3dm14" width="200"/>
@@ -57,7 +57,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3hektik.png" alt="q1q3hektik" width="200"/>
@@ -72,7 +72,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3monsoon.png" alt="q1q3monsoon" width="200"/>
@@ -87,7 +87,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3ospdm5.png" alt="q1q3ospdm5" width="200"/>
@@ -102,7 +102,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3phrantic.png" alt="q1q3phrantic" width="200"/>
@@ -117,7 +117,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3solid.png" alt="q1q3solid" width="200"/>
@@ -132,7 +132,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3thunderstruck.png" alt="q1q3thunderstruck" width="200"/>
@@ -147,7 +147,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3toxicity.png" alt="q1q3toxicity" width="200"/>
@@ -167,7 +167,7 @@
 
 ### 🔧 In Progress
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/japanc.png" alt="japanc" width="200"/>
@@ -183,7 +183,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3asylum.png" alt="q1q3asylum" width="200"/>
@@ -198,7 +198,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3cpm4.png" alt="q1q3cpm4" width="200"/>
@@ -213,7 +213,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3cure.png" alt="q1q3cure" width="200"/>
@@ -228,7 +228,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3dm7.png" alt="q1q3dm7" width="200"/>
@@ -243,7 +243,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3elder.png" alt="q1q3elder" width="200"/>
@@ -258,7 +258,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3evolution.png" alt="q1q3evolution" width="200"/>
@@ -273,7 +273,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3fheights.png" alt="q1q3fheights" width="200"/>
@@ -288,7 +288,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3gaudy.png" alt="q1q3gaudy" width="200"/>
@@ -303,7 +303,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3lastgift.png" alt="q1q3lastgift" width="200"/>
@@ -318,7 +318,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3overkill.png" alt="q1q3overkill" width="200"/>
@@ -333,7 +333,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3trinity.png" alt="q1q3trinity" width="200"/>
@@ -348,7 +348,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3vertical.png" alt="q1q3vertical" width="200"/>
@@ -367,7 +367,7 @@
 
 ### 📋 Planned
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1ra3map5.png" alt="q1ra3map5" width="200"/>
@@ -382,7 +382,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3drunkmummy.png" alt="q1q3drunkmummy" width="200"/>
@@ -397,7 +397,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3houseofdecay.png" alt="q1q3houseofdecay" width="200"/>
@@ -412,7 +412,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3shaken.png" alt="q1q3shaken" width="200"/>
@@ -427,7 +427,7 @@
   </tr>
 </table>
 
-<table width="100%">
+<table style="width:100%">
   <tr>
     <td width="220">
       <img src="img/q1q3sinister.png" alt="q1q3sinister" width="200"/>
