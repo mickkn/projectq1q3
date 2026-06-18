@@ -14,8 +14,8 @@
 | Status         | Count |
 |----------------|-------|
 | ✅ Finished     | 9     |
-| 🔧 In Progress | 10    |
-| 📋 Planned     | 3     |
+| 🔧 In Progress | 13    |
+| 📋 Planned     | 5     |
 
 ---
 
